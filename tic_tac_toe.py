@@ -8,10 +8,10 @@ class GameOverError(Exception):
 	def __str__(self):
 		return self.message
 
-class InvalidInput(Exception):
+class InvalidInputError(Exception):
 	""" raised when Game Over """
 	def __init__(self, message):
-		super(InvalidInput, self).__init__(message)
+		super(InvalidInputError, self).__init__(message)
 		
 
 class Board(list):
@@ -46,6 +46,10 @@ class Board(list):
 	def __setitem__(self, key, value):
 		row, col = key
 		print "Setting {},{} to {}".format(row, col, value)
+
+		if len( self[row, col] ) > 0:
+			raise InvalidInputError("This spot has already been played.")
+
 		super(type(self), self).__getitem__(row)[col] = value
 
 		self.check()
@@ -95,7 +99,6 @@ class Board(list):
 		''' check for victory
 			return True if the game is over (someone won, or board full)
 		'''
-		print "checking"
 		# check rows
 		for row in self:
 			if self.all_same(row):
@@ -141,6 +144,7 @@ class Board(list):
 
 b = Board()
 for i in range(3):
+	b[0,i] = 'a'
 	b[0,i] = 'a'
 	print b
 	print "\n"
