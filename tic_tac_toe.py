@@ -185,6 +185,8 @@ def Play(player1, player2):
 		print(b)
 
 
-Play(RandomUser('x'), HumanUser('o'))
+#Play(RandomUser('x'), HumanUser('o'))
 
+
+Play(HumanUser('M'), HumanUser('G'))
 
