@@ -53,6 +53,9 @@ class Board(list):
 		if not isinstance(value, str):
 			raise InvalidInputError("You must enter a string as input.")
 
+		if len(value) != 1:
+			raise InvalidInputError("Your string must be of length 1.")
+
 		super(type(self), self).__getitem__(row)[col] = value
 
 		self.check()
