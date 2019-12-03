@@ -170,7 +170,8 @@ class HumanUser(object):
 		
 		
 
-def Game(player1, player2):
+def Play(player1, player2):
+	''' play two users against one another '''
 	b= Board()
 	players = [player1, player2]
 	random.shuffle(players)
@@ -184,6 +185,6 @@ def Game(player1, player2):
 		print(b)
 
 
-Game(RandomUser('x'), HumanUser('o'))
+Play(RandomUser('x'), HumanUser('o'))
 
 
