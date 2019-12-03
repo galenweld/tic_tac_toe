@@ -46,7 +46,6 @@ class Board(list):
 
 	def __setitem__(self, key, value):
 		row, col = key
-		print "Setting {},{} to {}".format(row, col, value)
 
 		if len( self[row, col] ) > 0:
 			raise InvalidInputError("This spot has already been played.")
@@ -85,18 +84,15 @@ class Board(list):
 				yield (row_i, col_i), self[row_i,col_i]
 
 
-	def board_full(self):
-		for (_, _), element in self.positions():
-				if len(element) > 0: return False
-		return True
-
-
 	def valid_guesses(self):
 		v_g = []
 		for (row, col), element in self.positions():
 			if len(element) == 0:
 				v_g.append( (row, col) )
 		return v_g
+
+	def board_full(self):
+		return len(self.valid_guesses()) == 0
 
 
 	def check(self):
@@ -133,28 +129,58 @@ class Board(list):
 		
 		if self.board_full():
 			# stalemate
+			print "stalemate"
 			self.game_over = True
 			return
 
 		self.game_over = False
 
 
-	def make_random_move(self, user):
-		''' given a user, have them move to a random spot on the board '''
-		x, y = random.choice( self.valid_guesses() )
-		self[x,y] = user
+class RandomUser(object):
+	"""make random legal moves"""
+	def __init__(self, name):
+		self.name = name
+
+	def move(self, board):
+		x, y = random.choice( board.valid_guesses() )
+		board[x,y] = self.name
 
 
+class HumanUser(object):
+	""" prompt the human for input """
+	def __init__(self, name):
+		self.name = name
+
+	def move(self, board):
+		print(board)
+		print('\n')
+		print("It's {}'s turn!".format(self.name))
+		x,y=None, None
+		while (x,y) not in board.valid_guesses():
+			x, y = self.parse_move()
+		board[x,y] = self.name
+
+	def parse_move(self):
+		s = raw_input("Enter a valid move: ")
+		a,b = s.split(',')
+		return int(a), int(b)
+		
+		
+
+def Game(player1, player2):
+	b= Board()
+	players = [player1, player2]
+	random.shuffle(players)
+	try:
+		while not b.game_over:
+			for player in players:
+				player.move(b)
+
+	except GameOverError as e:
+		print(e)
+		print(b)
 
 
-def RandomGame():
-	b = Board()
+Game(RandomUser('x'), HumanUser('o'))
 
-	while not b.game_over:
-		for user in ('x', 'o'):
-			b.make_random_move(user)
-			print b
-			print "\n"
-			sleep(5)
 
-#RandomGame()
