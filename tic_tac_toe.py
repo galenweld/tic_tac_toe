@@ -1,4 +1,5 @@
 import random
+from time import sleep
 
 class GameOverError(Exception):
 	""" raised when Game Over """
@@ -49,6 +50,9 @@ class Board(list):
 
 		if len( self[row, col] ) > 0:
 			raise InvalidInputError("This spot has already been played.")
+
+		if not isinstance(value, str):
+			raise InvalidInputError("You must enter a string as input.")
 
 		super(type(self), self).__getitem__(row)[col] = value
 
@@ -142,9 +146,15 @@ class Board(list):
 
 
 
-b = Board()
-for i in range(3):
-	b[0,i] = 'a'
-	b[0,i] = 'a'
-	print b
-	print "\n"
+
+def RandomGame():
+	b = Board()
+
+	while not b.game_over:
+		for user in ('x', 'o'):
+			b.make_random_move(user)
+			print b
+			print "\n"
+			sleep(5)
+
+#RandomGame()
